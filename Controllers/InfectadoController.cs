@@ -35,5 +35,23 @@ namespace api_mongodb.Controllers
 
             return Ok(infectados);
         }
+
+        [HttpPut("{userId}")]
+        public ActionResult AtualizarInfectado([FromBody] InfectadoDto dto, int userId)
+        {
+            var infectado = new Infectado(dto.UserId, dto.DataNascimento, dto.Sexo, dto.Latitude, dto.Longitude);
+
+            _infectadosCollection.ReplaceOne(Builders<Infectado>.Filter.Where(x => x.UserId == userId), infectado);
+
+            return Ok("Atualizado com sucesso");
+        }
+
+        [HttpDelete("{userId}")]
+        public ActionResult DeletarInfectado(int userId)
+        {
+            _infectadosCollection.DeleteOne(Builders<Infectado>.Filter.Where(x => x.UserId == userId));
+
+            return Ok();
+        }
     }
 }
